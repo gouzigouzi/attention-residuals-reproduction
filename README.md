@@ -274,6 +274,40 @@ usage.
 - Chinese evaluation results for the 0.6B `full` mode still need to be completed under
   a unified setup or clearly documented supplementary setup.
 
+## Pretrained Weights
+
+| Model | Link |
+|-------|------|
+| 100M Baseline | [attention-residuals-100M-baseline](https://huggingface.co/Ethangou/attention-residuals-100M-baseline) |
+| 100M Block Attention Residuals | [attention-residuals-100M-block](https://huggingface.co/Ethangou/attention-residuals-100M-block) |
+| 100M Full Attention Residuals | [attention-residuals-100M-full](https://huggingface.co/Ethangou/attention-residuals-100M-full) |
+| 0.6B Baseline | [attention-residuals-0.6B-baseline](https://huggingface.co/Ethangou/attention-residuals-0.6B-baseline) |
+| 0.6B Block Attention Residuals | [attention-residuals-0.6B-block](https://huggingface.co/Ethangou/attention-residuals-0.6B-block) |
+
+## Findings
+
+1. **Attention Residuals provide consistent gains on Chinese held-out perplexity.** At
+   the 100M scale, `full` and `block` reach PPL scores of 104.51 and 105.09,
+   respectively, both clearly below the baseline score of 128.58. At the 0.6B scale,
+   `block` reaches 38.80 PPL, also improving over the baseline score of 41.83.
+
+2. **Block AttnRes is the more practical scaling choice in the current setup.** Based
+   on the training curves and 0.6B results, `block` achieves better training loss and
+   held-out PPL while keeping memory overhead more manageable, making it the first
+   variant to try for larger models and longer `seq_len` settings.
+
+3. **Full AttnRes achieves the best 100M PPL but costs more memory.** In the 100M
+   experiments, `full` has the lowest held-out PPL and matches `block` on C-Eval.
+   However, at 0.6B with `seq_len=2048`, its memory pressure is substantially higher,
+   so it is better treated as a supplementary experiment with shorter sequences or
+   additional memory optimizations.
+
+4. **Downstream multiple-choice gains are more limited than PPL gains.** At 100M,
+   Attention Residuals improve C-Eval, but CMMLU does not improve consistently. At
+   0.6B, `block` improves PPL and C-Eval, while CMMLU remains close to the baseline.
+   This suggests that the current gains are clearest in language-modeling perplexity,
+   while downstream ability needs longer training or larger-scale validation.
+
 ## Acknowledgements
 
 - [Attention Residuals](https://arxiv.org/abs/2603.15031)
