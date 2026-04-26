@@ -226,8 +226,8 @@ subset of C-Eval and CMMLU subjects.
 | Model | Chinese Held-out PPL | C-Eval Acc | CMMLU Acc |
 |-------|----------------------|------------|-----------|
 | Baseline (Standard Residual) | 41.83 | 0.2533 | 0.2656 |
-| Block Attention Residuals | 38.80 | 0.2620 | 0.2625 |
 | Full Attention Residuals | TBD | TBD | TBD |
+| Block Attention Residuals | 38.80 | 0.2620 | 0.2625 |
 
 For the 0.6B experiments, `baseline` and `block` use `seq_len=2048`. Because of
 memory constraints, `full` is better recorded as a separate supplementary

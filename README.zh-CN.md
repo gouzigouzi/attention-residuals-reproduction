@@ -205,8 +205,8 @@ CMMLU 的部分 subject 上做 few-shot 多选题评测。
 | Model | Chinese Held-out PPL | C-Eval Acc | CMMLU Acc |
 |-------|----------------------|------------|-----------|
 | Baseline (Standard Residual) | 41.83 | 0.2533 | 0.2656 |
-| Block Attention Residuals | 38.80 | 0.2620 | 0.2625 |
 | Full Attention Residuals | 待补充 | 待补充 | 待补充 |
+| Block Attention Residuals | 38.80 | 0.2620 | 0.2625 |
 
 0.6B 实验中，`baseline` 和 `block` 使用 `seq_len=2048`。`full` 模式因显存限制，建议作为
 `seq_len=1024` 的补充实验单独记录，避免和 `seq_len=2048` 的结果直接横向比较。
