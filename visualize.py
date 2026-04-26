@@ -14,22 +14,19 @@ import json
 import os
 from datetime import datetime
 
-import matplotlib.pyplot as plt
 import torch
 
-from app import (
-    extract_weights,
-    load_tokenizer,
-    plot_layer_deps,
-    plot_token_weights,
-)
 from eval import load_training_dataset
 from eval_helpers import get_sample_text
 from modeling_attnres import Qwen3AttnResForCausalLM
-from visualize_helpers import make_sample_dirname, select_visualization_texts
-
-plt.rcParams["font.sans-serif"] = ["SimHei"]
-plt.rcParams["axes.unicode_minus"] = False
+from visualize_helpers import (
+    extract_weights,
+    load_tokenizer,
+    make_sample_dirname,
+    plot_layer_deps,
+    plot_token_weights,
+    select_visualization_texts,
+)
 
 
 def parse_args():

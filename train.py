@@ -68,8 +68,10 @@ def parse_args():
     p.add_argument("--save_every", type=int, default=2000)
     p.add_argument("--log_every", type=int, default=10)
     p.add_argument("--out_dir", default=None)
-    p.add_argument("--wandb_project", default="attention-residuals-project")
-    p.add_argument("--wandb_entity", default="3113700669-zhejiang-university")
+    p.add_argument("--use_wandb", action="store_true",
+                   help="Enable Weights & Biases logging. Disabled by default.")
+    p.add_argument("--wandb_project", default="")
+    p.add_argument("--wandb_entity", default="")
     p.add_argument("--run_name", default=None)
     p.add_argument("--seed", type=int, default=42)
     return p.parse_args()
@@ -183,9 +185,9 @@ def main():
     args = parse_args()
 
     if args.run_name is None:
-        args.run_name = f"scratch-{args.mode}-d{args.hidden_size}-L{args.num_layers}-{args.steps//1000}k"
+        args.run_name = f"{args.mode}-d{args.hidden_size}-L{args.num_layers}-{args.steps//1000}k"
     if args.out_dir is None:
-        args.out_dir = f"./output/scratch-{args.mode}-d{args.hidden_size}-L{args.num_layers}-{args.steps//1000}k"
+        args.out_dir = f"./output/{args.mode}-d{args.hidden_size}-L{args.num_layers}-{args.steps//1000}k"
 
     # ── distributed ──
     dist.init_process_group("nccl")
@@ -200,7 +202,7 @@ def main():
 
     # ── W&B ──
     use_wandb = False
-    if is_main:
+    if is_main and args.use_wandb:
         try:
             import wandb
             wandb.init(project=args.wandb_project, entity=args.wandb_entity,
@@ -211,7 +213,7 @@ def main():
 
     # ── model ──
     if is_main:
-        print(f"Building {args.mode} model from scratch...")
+        print(f"Building {args.mode} model...")
 
     model = build_model(args, device)
 

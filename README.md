@@ -77,7 +77,6 @@ Main dependencies include:
 - `modelscope`
 - `wandb`
 - `matplotlib`
-- `gradio`
 
 ## Training
 

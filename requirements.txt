@@ -5,5 +5,4 @@ modelscope
 addict
 wandb
 matplotlib
-gradio
 tqdm
