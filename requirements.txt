@@ -1,0 +1,9 @@
+torch>=2.0
+transformers>=4.40
+datasets
+modelscope
+addict
+wandb
+matplotlib
+gradio
+tqdm

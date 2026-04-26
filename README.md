@@ -2,10 +2,9 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-A clean PyTorch reproduction of the Attention Residuals idea, based on the code
-structure of [Open Attention Residuals](https://github.com/wdlctc/open-attention-residuals).
-The goal is to compare standard residual connections with Attention Residuals on
-Qwen3-style decoder-only Transformers.
+This project is a reproduction experiment of the Attention Residuals method
+published by the Kimi team in 2026. Its core goal is to compare standard residual
+connections with Attention Residuals on Qwen3-style decoder-only Transformers.
 
 Compared with the original project, this repository focuses more on Chinese data and
 Chinese evaluation scenarios. The default training data is
@@ -15,7 +14,7 @@ perplexity, C-Eval, and CMMLU. The implementation keeps three modes:
 multi-GPU DDP, batch assembly, checkpoint saving, and visualization.
 
 <p align="center">
-  <img src="figures/training_loss_0.6b.png" width="700">
+  <img src="figures/training_loss_block_0.6B.png" width="700">
 </p>
 
 ## Core Idea
@@ -46,10 +45,9 @@ block-level or sublayer-level representations.
 - `full`: applies attention over finer-grained historical sublayers/states. It provides
   finer routing but requires more memory and compute.
 
-## Main Differences From The Original Project
+## Project Details
 
-- The training data is changed from English FineWeb-Edu to Chinese
-  `opencsg/Fineweb-Edu-Chinese-V2.2`.
+- The training data uses the Chinese dataset `Chinese FineWeb Edu V2.2`.
 - Data loading supports both `modelscope` and `huggingface`; ModelScope is used by
   default.
 - In multi-GPU streaming training, samples are sharded by rank before shuffling to
@@ -87,7 +85,7 @@ Main dependencies include:
 
 ```bash
 # Baseline
-torchrun --nproc_per_node=2 --master_port=29500 train.py \
+torchrun --nproc_per_node=2 train.py \
   --mode baseline \
   --hidden_size 512 \
   --num_layers 12 \
@@ -100,7 +98,7 @@ torchrun --nproc_per_node=2 --master_port=29500 train.py \
   --grad_accum 8
 
 # Block Attention Residuals
-torchrun --nproc_per_node=2 --master_port=29500 train.py \
+torchrun --nproc_per_node=2 train.py \
   --mode block \
   --hidden_size 512 \
   --num_layers 12 \
@@ -114,7 +112,7 @@ torchrun --nproc_per_node=2 --master_port=29500 train.py \
   --grad_accum 8
 
 # Full Attention Residuals
-torchrun --nproc_per_node=2 --master_port=29500 train.py \
+torchrun --nproc_per_node=2 train.py \
   --mode full \
   --hidden_size 512 \
   --num_layers 12 \
@@ -137,7 +135,7 @@ d=1024, L=28, heads=16, kv_heads=8, ff=3072
 
 ```bash
 # Baseline
-torchrun --nproc_per_node=2 --master_port=29500 train.py \
+torchrun --nproc_per_node=2 train.py \
   --mode baseline \
   --hidden_size 1024 \
   --num_layers 28 \
@@ -153,7 +151,7 @@ torchrun --nproc_per_node=2 --master_port=29500 train.py \
   --save_every 50000
 
 # Block Attention Residuals
-torchrun --nproc_per_node=2 --master_port=29500 train.py \
+torchrun --nproc_per_node=2 train.py \
   --mode block \
   --hidden_size 1024 \
   --num_layers 28 \
@@ -207,6 +205,14 @@ subset of C-Eval and CMMLU subjects.
 | Full Attention Residuals | 104.51 | 0.2969 | 0.2375 |
 | Block Attention Residuals | 105.09 | 0.2969 | 0.2469 |
 
+<p align="center">
+  <img src="figures/training_loss_block_vs_baseline_100M.png" width="700">
+</p>
+
+<p align="center">
+  <img src="figures/training_loss_block_vs_full_100M.png" width="700">
+</p>
+
 ### 0.6B Model
 
 | Model | Chinese Held-out PPL | C-Eval Acc | CMMLU Acc |
@@ -220,15 +226,11 @@ memory constraints, `full` is better recorded as a separate supplementary
 `seq_len=1024` experiment instead of being compared directly against the
 `seq_len=2048` results.
 
+<p align="center">
+  <img src="figures/training_loss_block_vs_baseline_0.6B.png" width="700">
+</p>
+
 ## Visualization
-
-Interactive visualization:
-
-```bash
-python app.py --model_path output/scratch-block-d512-L12-20k/final --mode block
-```
-
-Offline visualization export:
 
 ```bash
 python visualize.py \
@@ -237,6 +239,10 @@ python visualize.py \
   --num_texts 3 \
   --out_dir ./output/visualizations
 ```
+
+<p align="center">
+  <img src="figures/layer_dependencies_block_0.6B.png" width="700">
+</p>
 
 In the heatmap, the y-axis represents sublayers, such as `Attn 0` and `MLP 0`. The
 x-axis represents source blocks in `block` mode, such as `B0` to `B7`, and source
@@ -271,6 +277,5 @@ usage.
 
 ## Acknowledgements
 
-- [Open Attention Residuals](https://github.com/wdlctc/open-attention-residuals)
 - [Attention Residuals](https://arxiv.org/abs/2603.15031)
 - [Qwen3](https://arxiv.org/abs/2505.09388)

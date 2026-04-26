@@ -2,8 +2,7 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-本项目是对 Attention Residuals 思想的复现实验，代码结构参考
-[Open Attention Residuals](https://github.com/wdlctc/open-attention-residuals)，核心目标是在
+本项目是对 Kimi 团队在2026年发表的 Attention Residuals 文章方法的复现实验，核心目标是在
 Qwen3 风格的 decoder-only Transformer 上比较标准残差连接与 Attention Residuals 的差异。
 
 与原项目相比，本项目更侧重中文数据和中文评测场景：训练数据默认使用
@@ -12,7 +11,7 @@ Qwen3 风格的 decoder-only Transformer 上比较标准残差连接与 Attentio
 组装、checkpoint 保存和可视化输出做了适配。
 
 <p align="center">
-  <img src="figures/training_loss_0.6b.png" width="700">
+  <img src="figures/training_loss_block_0.6B.png" width="700">
 </p>
 
 ## 核心思想
@@ -39,9 +38,9 @@ h_l = sum_i alpha_{i -> l} * s_i
 - `block`: 将网络划分成若干 block，在 block 级别对历史表示做深度 attention。该模式显存开销较可控。
 - `full`: 对更细粒度的历史 sublayer/state 做 attention，路由更细，但显存和计算开销更高。
 
-## 与原项目的主要差异
+## 项目细节
 
-- 训练数据从英文 FineWeb-Edu 改为中文 `opencsg/Fineweb-Edu-Chinese-V2.2`。
+- 训练数据使用中文数据集 `Chinese FineWeb Edu V2.2 `。
 - 数据加载支持 `modelscope` 和 `huggingface` 两种来源，默认使用 ModelScope。
 - 多卡流式训练中先按 rank 分片，再 shuffle，避免不同 GPU 读取大量重复样本。
 - `batch_size` 已实际生效：训练循环会把多个 token chunk stack 成 `[B, T]`。
@@ -72,7 +71,7 @@ pip install -r requirements.txt
 
 ```bash
 # Baseline
-torchrun --nproc_per_node=2 --master_port=29500 train.py \
+torchrun --nproc_per_node=2 train.py \
   --mode baseline \
   --hidden_size 512 \
   --num_layers 12 \
@@ -85,7 +84,7 @@ torchrun --nproc_per_node=2 --master_port=29500 train.py \
   --grad_accum 8
 
 # Block Attention Residuals
-torchrun --nproc_per_node=2 --master_port=29500 train.py \
+torchrun --nproc_per_node=2 train.py \
   --mode block \
   --hidden_size 512 \
   --num_layers 12 \
@@ -99,7 +98,7 @@ torchrun --nproc_per_node=2 --master_port=29500 train.py \
   --grad_accum 8
 
 # Full Attention Residuals
-torchrun --nproc_per_node=2 --master_port=29500 train.py \
+torchrun --nproc_per_node=2 train.py \
   --mode full \
   --hidden_size 512 \
   --num_layers 12 \
@@ -122,7 +121,7 @@ d=1024, L=28, heads=16, kv_heads=8, ff=3072
 
 ```bash
 # Baseline
-torchrun --nproc_per_node=2 --master_port=29500 train.py \
+torchrun --nproc_per_node=2 train.py \
   --mode baseline \
   --hidden_size 1024 \
   --num_layers 28 \
@@ -138,7 +137,7 @@ torchrun --nproc_per_node=2 --master_port=29500 train.py \
   --save_every 50000
 
 # Block Attention Residuals
-torchrun --nproc_per_node=2 --master_port=29500 train.py \
+torchrun --nproc_per_node=2 train.py \
   --mode block \
   --hidden_size 1024 \
   --num_layers 28 \
@@ -190,6 +189,14 @@ CMMLU 的部分 subject 上做 few-shot 多选题评测。
 | Full Attention Residuals | 104.51 | 0.2969 | 0.2375 |
 | Block Attention Residuals | 105.09 | 0.2969 | 0.2469 |
 
+<p align="center">
+  <img src="figures/training_loss_block_vs_baseline_100M.png" width="700">
+</p>
+
+<p align="center">
+  <img src="figures/training_loss_block_vs_full_100M.png" width="700">
+</p>
+
 ### 0.6B 模型
 
 | Model | Chinese Held-out PPL | C-Eval Acc | CMMLU Acc |
@@ -201,16 +208,11 @@ CMMLU 的部分 subject 上做 few-shot 多选题评测。
 0.6B 实验中，`baseline` 和 `block` 使用 `seq_len=2048`。`full` 模式因显存限制，建议作为
 `seq_len=1024` 的补充实验单独记录，避免和 `seq_len=2048` 的结果直接横向比较。
 
+<p align="center">
+  <img src="figures/training_loss_block_vs_baseline_0.6B.png" width="700">
+</p>
+
 ## 可视化
-
-交互式可视化：
-
-```bash
-python app.py --model_path output/scratch-block-d512-L12-20k/final --mode block
-```
-
-离线导出可视化：
-
 ```bash
 python visualize.py \
   --model_path output/scratch-block-d512-L12-20k/final \
@@ -218,6 +220,11 @@ python visualize.py \
   --num_texts 3 \
   --out_dir ./output/visualizations
 ```
+
+<p align="center">
+  <img src="figures/layer_dependencies_block_0.6B.png" width="700">
+</p>
+
 
 热图中的纵轴表示子层，例如 `Attn 0`、`MLP 0`。横轴在 `block` 模式下表示 source block，
 例如 `B0` 到 `B7`；在 `full` 模式下表示 source state，例如 `S0`、`S1`。方块中的数字是该
@@ -245,6 +252,5 @@ source 对当前子层的平均 AttnRes 权重。
 
 ## 致谢
 
-- [Open Attention Residuals](https://github.com/wdlctc/open-attention-residuals)
 - [Attention Residuals](https://arxiv.org/abs/2603.15031)
 - [Qwen3](https://arxiv.org/abs/2505.09388)
