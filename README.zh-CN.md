@@ -11,7 +11,7 @@ Qwen3 风格的 decoder-only Transformer 上比较标准残差连接与 Attentio
 组装、checkpoint 保存和可视化输出做了适配。
 
 <p align="center">
-  <img src="figures/training_loss_block_0.6B.png" width="700">
+  <img src="figures/training_loss_block_0.6B.png">
 </p>
 
 ## 核心思想
@@ -190,7 +190,7 @@ CMMLU 的部分 subject 上做 few-shot 多选题评测。
 | Block Attention Residuals | 105.09 | 0.2969 | 0.2469 |
 
 <p align="center">
-  <img src="figures/training_loss_block_vs_baseline_100M.png" width="700">
+  <img src="figures/training_loss_block_vs_baseline_100M.png">
 </p>
 
 <p align="center">
