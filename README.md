@@ -337,27 +337,32 @@ usage.
 
 ## Findings
 
-1. **Attention Residuals provide consistent gains on Chinese held-out perplexity.** At
-   the 100M scale, `full` and `block` reach PPL scores of 104.51 and 105.09,
-   respectively, both clearly below the baseline score of 128.58. At the 0.6B scale,
-   `block` reaches 38.80 PPL, also improving over the baseline score of 41.83.
+1. **At the 100M scale, Attention Residuals clearly improve language-modeling quality
+   over the baseline.** `full` and `block` reach Chinese held-out PPL values of 104.51
+   and 105.09, both substantially below the baseline score of 128.58. Both variants
+   also improve C-Eval to 0.2969, above the baseline's 0.2664.
 
-2. **Block AttnRes is the more practical scaling choice in the current setup.** Based
-   on the training curves and 0.6B results, `block` achieves better training loss and
-   held-out PPL while keeping memory overhead more manageable, making it the first
-   variant to try for larger models and longer `seq_len` settings.
+2. **Block AttnRes remains the most robust and scalable variant in the current setup.**
+   At the 0.6B scale, `block` reduces PPL from 41.83 to 38.80 while keeping
+   `seq_len=2048`, and it also improves C-Eval from 0.2533 to 0.2620. CMMLU stays
+   close to the baseline at 0.2625 versus 0.2656. Taken together with the training
+   curves and lower memory overhead, `block` is still the first variant to try when
+   scaling to larger models or longer sequences.
 
-3. **Full AttnRes achieves the best 100M PPL but costs more memory.** In the 100M
-   experiments, `full` has the lowest held-out PPL and matches `block` on C-Eval.
-   However, at 0.6B with `seq_len=2048`, its memory pressure is substantially higher,
-   so it is better treated as a supplementary experiment with shorter sequences or
-   additional memory optimizations.
+3. **Full AttnRes is more sensitive to the experimental setup and is best interpreted
+   as a supplementary result at 0.6B.** At 100M, `full` achieves the best PPL. At
+   0.6B, however, the recorded `full` run uses the supplementary `seq_len=1024`
+   setting rather than the same `seq_len=2048` setup used by `baseline` and `block`.
+   It reaches the highest C-Eval score in the table at 0.2926, but its PPL is 57.34
+   and its CMMLU is 0.2188, so it should not be read as a direct like-for-like win
+   over the other two variants.
 
-4. **Downstream multiple-choice gains are more limited than PPL gains.** At 100M,
-   Attention Residuals improve C-Eval, but CMMLU does not improve consistently. At
-   0.6B, `block` improves PPL and C-Eval, while CMMLU remains close to the baseline.
-   This suggests that the current gains are clearest in language-modeling perplexity,
-   while downstream ability needs longer training or larger-scale validation.
+4. **The gains are metric-dependent rather than uniform across all evaluations.**
+   Held-out PPL shows the clearest and most stable benefit from Attention Residuals.
+   C-Eval also improves at both scales, with especially strong performance in the
+   supplementary `0.6B full` run. CMMLU, however, does not improve consistently,
+   suggesting that downstream multiple-choice performance is still sensitive to
+   training length, data, and a fully unified evaluation setup.
 
 ## Acknowledgements
 

@@ -306,20 +306,23 @@ source 对当前子层的平均 AttnRes 权重。
 
 ## 实验结论
 
-1. **Attention Residuals 在中文 held-out perplexity 上带来稳定收益。** 在 100M 规模下，
-   `full` 和 `block` 的 PPL 分别为 104.51 和 105.09，均明显低于 baseline 的 128.58；在
-   0.6B 规模下，`block` 的 PPL 为 38.80，也低于 baseline 的 41.83。
+1. **100M 规模下，Attention Residuals 在语言建模指标上明显优于 baseline。** `full` 和
+   `block` 的 Chinese held-out PPL 分别为 104.51 和 105.09，均显著低于 baseline 的 128.58；
+   两者的 C-Eval 也同时提升到 0.2969，高于 baseline 的 0.2664。
 
-2. **Block AttnRes 是当前更稳妥的扩展方案。** 从训练曲线和 0.6B 结果看，`block` 在较低显存
-   开销下取得了更好的训练 loss 和 held-out PPL，适合在较大模型和较长 `seq_len` 设置中优先尝试。
+2. **Block AttnRes 是当前最稳妥、最易扩展的方案。** 在 0.6B 规模下，`block` 在保持
+   `seq_len=2048` 的条件下将 PPL 从 41.83 降到 38.80，同时把 C-Eval 从 0.2533 提升到 0.2620，
+   而 CMMLU 仅从 0.2656 小幅波动到 0.2625。结合训练曲线和显存开销，`block` 仍是更适合优先扩展
+   到大模型和长序列的配置。
 
-3. **Full AttnRes 在 100M 规模下取得了最优 PPL，但显存成本更高。** 100M 实验中 `full` 的
-   held-out PPL 最低，并且 C-Eval 与 `block` 持平；但在 0.6B、`seq_len=2048` 设置下显存压力
-   明显更大，因此更适合作为短序列或显存优化后的补充实验。
+3. **Full AttnRes 的收益更依赖实验设置，当前更适合作为补充实验解读。** 在 100M 规模下，
+   `full` 取得了最佳 PPL；但在 0.6B 结果中，当前记录的 `full` 实验是 `seq_len=1024` 的补充设置，
+   它的 C-Eval 达到 0.2926，为当前表中最高，但 PPL 为 57.34、CMMLU 为 0.2188，不能简单视为在统一
+   条件下全面优于 `baseline` 或 `block`。
 
-4. **下游选择题评测的提升相对有限。** 100M 规模下 Attention Residuals 提升了 C-Eval，但
-   CMMLU 表现并未同步提升；0.6B 规模下 `block` 改善了 PPL 和 C-Eval，但 CMMLU 与 baseline
-   基本接近。这说明当前收益主要体现在语言建模困惑度上，下游能力仍需要更充分训练或更大规模验证。
+4. **不同评测指标的收益并不完全一致。** 当前结果表明，Attention Residuals 对 held-out PPL 的改善
+   最稳定；C-Eval 在 100M 和 0.6B 上都能看到一定提升，尤其是 `0.6B full` 的补充实验表现更高；
+   但 CMMLU 尚未出现同步提升，说明下游多选题能力对残差形式之外的训练时长、数据和统一评测设置仍然敏感。
 
 ## 致谢
 
