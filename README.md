@@ -226,7 +226,7 @@ subset of C-Eval and CMMLU subjects.
 | Model | Chinese Held-out PPL | C-Eval Acc | CMMLU Acc |
 |-------|----------------------|------------|-----------|
 | Baseline (Standard Residual) | 41.83 | 0.2533 | 0.2656 |
-| Full Attention Residuals | TBD | TBD | TBD |
+| Full Attention Residuals | 57.34 | 0.2926 | 0.2188 |
 | Block Attention Residuals | 38.80 | 0.2620 | 0.2625 |
 
 For the 0.6B experiments, `baseline` and `block` use `seq_len=2048`. Because of
@@ -237,6 +237,11 @@ memory constraints, `full` is better recorded as a separate supplementary
 <p align="center">
   <img src="figures/training_loss_block_vs_baseline_0.6B.png" width="700">
 </p>
+
+<p align="center">
+  <img src="figures/training_loss_block_vs_full_0.6B.png" width="700">
+</p>
+
 
 ## Visualization
 
@@ -250,6 +255,10 @@ python visualize.py \
 
 <p align="center">
   <img src="figures/layer_dependencies_block_0.6B.png" width="700">
+</p>
+
+<p align="center">
+  <img src="figures/layer_dependencies_full_0.6B.png" width="700">
 </p>
 
 In the heatmap, the y-axis represents sublayers, such as `Attn 0` and `MLP 0`. The
