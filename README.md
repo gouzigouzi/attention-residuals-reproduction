@@ -22,6 +22,10 @@ multi-GPU DDP, batch assembly, checkpoint saving, and visualization.
   <img src="figures/training_loss_block_0.6B.png" width="700">
 </p>
 
+<p align="center">
+  <em>Figure 1: Training loss curve for the 0.6B Block Attention Residuals model</em>
+</p>
+
 ## Core Idea
 
 Standard Transformers use additive residual connections:
@@ -44,6 +48,10 @@ block-level or sublayer-level representations.
 
 <p align="center">
   <img src="figures/overview_of_attention_residuals.png" width="700">
+</p>
+
+<p align="center">
+  <em>Figure 2: Overview of the Attention Residuals method</em>
 </p>
 
 ## Modes
@@ -218,7 +226,15 @@ subset of C-Eval and CMMLU subjects.
 </p>
 
 <p align="center">
+  <em>Figure 3: Training loss comparison between Block Attention Residuals and the baseline at the 100M scale</em>
+</p>
+
+<p align="center">
   <img src="figures/training_loss_block_vs_full_100M.png" width="700">
+</p>
+
+<p align="center">
+  <em>Figure 4: Training loss comparison between Block Attention Residuals and Full Attention Residuals at the 100M scale</em>
 </p>
 
 ### 0.6B Model
@@ -239,7 +255,15 @@ memory constraints, `full` is better recorded as a separate supplementary
 </p>
 
 <p align="center">
+  <em>Figure 5: Training loss comparison between Block Attention Residuals and the baseline at the 0.6B scale</em>
+</p>
+
+<p align="center">
   <img src="figures/training_loss_block_vs_full_0.6B.png" width="700">
+</p>
+
+<p align="center">
+  <em>Figure 6: Training loss comparison between Block Attention Residuals and Full Attention Residuals at the 0.6B scale</em>
 </p>
 
 
@@ -258,7 +282,15 @@ python visualize.py \
 </p>
 
 <p align="center">
+  <em>Figure 7: Layer dependency heatmap for the 0.6B Block Attention Residuals model (`block` mode)</em>
+</p>
+
+<p align="center">
   <img src="figures/layer_dependencies_full_0.6B.png" width="700">
+</p>
+
+<p align="center">
+  <em>Figure 8: Layer dependency heatmap for the 0.6B Full Attention Residuals model (`full` mode)</em>
 </p>
 
 In the heatmap, the y-axis represents sublayers, such as `Attn 0` and `MLP 0`. The
@@ -301,6 +333,7 @@ usage.
 | 100M Full Attention Residuals | [attention-residuals-100M-full](https://huggingface.co/Ethangou/attention-residuals-100M-full) |
 | 0.6B Baseline | [attention-residuals-0.6B-baseline](https://huggingface.co/Ethangou/attention-residuals-0.6B-baseline) |
 | 0.6B Block Attention Residuals | [attention-residuals-0.6B-block](https://huggingface.co/Ethangou/attention-residuals-0.6B-block) |
+| 0.6B Full Attention Residuals | [attention-residuals-0.6B-full](https://huggingface.co/Ethangou/attention-residuals-0.6B-full) |
 
 ## Findings
 

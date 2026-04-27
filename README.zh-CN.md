@@ -14,6 +14,10 @@ Qwen3 风格的 decoder-only Transformer 上比较标准残差连接与 Attentio
   <img src="figures/training_loss_block_0.6B.png" width="700">
 </p>
 
+<p align="center">
+  <em>图 1：0.6B Block Attention Residuals 模型的训练 loss 曲线</em>
+</p>
+
 ## 核心思想
 
 标准 Transformer 使用加法残差连接：
@@ -34,6 +38,10 @@ h_l = sum_i alpha_{i -> l} * s_i
 
 <p align="center">
   <img src="figures/overview_of_attention_residuals.png" width="700">
+</p>
+
+<p align="center">
+  <em>图 2：Attention Residuals 方法概览</em>
 </p>
 
 ## 模式
@@ -197,7 +205,15 @@ CMMLU 的部分 subject 上做 few-shot 多选题评测。
 </p>
 
 <p align="center">
+  <em>图 3：100M 规模下 Block Attention Residuals 与 Baseline 的训练 loss 对比</em>
+</p>
+
+<p align="center">
   <img src="figures/training_loss_block_vs_full_100M.png" width="700">
+</p>
+
+<p align="center">
+  <em>图 4：100M 规模下 Block Attention Residuals 与 Full Attention Residuals 的训练 loss 对比</em>
 </p>
 
 ### 0.6B 模型
@@ -216,7 +232,15 @@ CMMLU 的部分 subject 上做 few-shot 多选题评测。
 </p>
 
 <p align="center">
+  <em>图 5：0.6B 规模下 Block Attention Residuals 与 Baseline 的训练 loss 对比</em>
+</p>
+
+<p align="center">
   <img src="figures/training_loss_block_vs_full_0.6B.png" width="700">
+</p>
+
+<p align="center">
+  <em>图 6：0.6B 规模下 Block Attention Residuals 与 Full Attention Residuals 的训练 loss 对比</em>
 </p>
 
 ## 可视化
@@ -233,7 +257,15 @@ python visualize.py \
 </p>
 
 <p align="center">
+  <em>图 7：0.6B Block Attention Residuals 模型的层间依赖热图（block 模式）</em>
+</p>
+
+<p align="center">
   <img src="figures/layer_dependencies_full_0.6B.png" width="700">
+</p>
+
+<p align="center">
+  <em>图 8：0.6B Full Attention Residuals 模型的层间依赖热图（full 模式）</em>
 </p>
 
 
@@ -270,6 +302,7 @@ source 对当前子层的平均 AttnRes 权重。
 | 100M Full Attention Residuals | [attention-residuals-100M-full](https://huggingface.co/Ethangou/attention-residuals-100M-full) |
 | 0.6B Baseline | [attention-residuals-0.6B-baseline](https://huggingface.co/Ethangou/attention-residuals-0.6B-baseline) |
 | 0.6B Block Attention Residuals | [attention-residuals-0.6B-block](https://huggingface.co/Ethangou/attention-residuals-0.6B-block) |
+| 0.6B Full Attention Residuals | [attention-residuals-0.6B-full](https://huggingface.co/Ethangou/attention-residuals-0.6B-full) |
 
 ## 实验结论
 
