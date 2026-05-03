@@ -1,14 +1,15 @@
-# attention-residuals-reproduction
+# attention-residuals-for-chinese-llms
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-本项目是对 Kimi 团队在2026年发表的 Attention Residuals 文章方法的复现实验，核心目标是在
-Qwen3 风格的 decoder-only Transformer 上比较标准残差连接与 Attention Residuals 的差异。
+本项目围绕 Attention Residuals 在中文大语言模型中的应用展开，面向 Qwen3 风格的
+decoder-only Transformer 完成了结构实现、训练适配、评测分析与可视化，重点关注中文预训练
+数据、分布式训练流程以及中文基准上的效果对比。
 
-与原项目相比，本项目更侧重中文数据和中文评测场景：训练数据默认使用
-`opencsg/Fineweb-Edu-Chinese-V2.2`，评测包含中文 held-out perplexity、C-Eval 和 CMMLU。
-实现上保留了 `baseline`、`block`、`full` 三种模式，并针对流式中文数据、多卡 DDP、batch
-组装、checkpoint 保存和可视化输出做了适配。
+在原始 Attention Residuals 论文设定基础上，本仓库进一步强化了中文场景下的训练与评测：
+训练数据默认使用 `opencsg/Fineweb-Edu-Chinese-V2.2`，评测包含中文 held-out perplexity、
+C-Eval 和 CMMLU。实现上提供 `baseline`、`block`、`full` 三种结构模式，并补充了针对流式
+中文数据、多卡 DDP、batch 组装、checkpoint 管理和可视化分析的工程化支持。
 
 <p align="center">
   <img src="figures/training_loss_block_0.6B.png" width="700">

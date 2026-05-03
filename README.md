@@ -1,4 +1,4 @@
-# attention-residuals-reproduction
+# attention-residuals-for-chinese-llms
 
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
 ![LLM](https://img.shields.io/badge/Transformers-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)
@@ -7,16 +7,18 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-This project is a reproduction experiment of the Attention Residuals method
-published by the Kimi team in 2026. Its core goal is to compare standard residual
-connections with Attention Residuals on Qwen3-style decoder-only Transformers.
+This repository presents an Attention Residuals research and engineering project for
+Chinese large language models. It implements, adapts, and evaluates depth-wise
+residual routing on Qwen3-style decoder-only Transformers, with a focus on Chinese
+pretraining data, distributed training, and downstream benchmark analysis.
 
-Compared with the original project, this repository focuses more on Chinese data and
-Chinese evaluation scenarios. The default training data is
+Building on the original Attention Residuals paper setup, this repository emphasizes
+Chinese-centric training and evaluation. The default training data is
 `opencsg/Fineweb-Edu-Chinese-V2.2`, and evaluation covers Chinese held-out
-perplexity, C-Eval, and CMMLU. The implementation keeps three modes:
-`baseline`, `block`, and `full`, with adaptations for streaming Chinese data,
-multi-GPU DDP, batch assembly, checkpoint saving, and visualization.
+perplexity, C-Eval, and CMMLU. The implementation provides three architecture
+variants, `baseline`, `block`, and `full`, together with engineering support for
+streaming data, multi-GPU DDP, batch assembly, checkpoint management, and
+visualization.
 
 <p align="center">
   <img src="figures/training_loss_block_0.6B.png" width="700">
